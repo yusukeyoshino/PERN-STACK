@@ -37,6 +37,16 @@ app.get("/todos", async(req,res)=>{
 
 // get a todo
 
+app.get("/todos/:id",async (req,res)=>{
+  try {
+    const {id} = req.params;
+    const todo = await pool.query("SELECT * FROM todo WHERE todo_id = $1",[id]);
+    res.json(todo.rows);
+  } catch(err){
+    console.error(err);
+  }
+})
+
 // update a todo
 
 app.listen(5000, () => {
