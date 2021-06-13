@@ -9,10 +9,16 @@ require('dotenv').config();
 
 app.use(cors());
 app.use(express.json());
+app.use(logger);
 
 // Routes
 
 // create a todo
+
+app.get("/",auth,(req,res)=>{
+  console.log("FROM main")
+  res.send("MAIN PAGE");
+})
 
 app.post("/todos", async(req,res)=>{
   try {
@@ -70,6 +76,24 @@ app.delete("/todos/:id", async (req,res)=>{
     console.error(err.message);
   }
 })
+
+
+function logger(req,res,next){
+  console.log("FROM logger");
+  next();
+  console.log("LAST FROM logger");
+  return;
+}
+
+function auth(req,res,next){
+  if(req.query.admin === 'true'){
+    next();
+    return;
+  } else {
+    res.send("You are not login");
+  }
+
+}
 
 app.listen(5000, () => {
   console.log("server has started on port 5000");
